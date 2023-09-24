@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.udemy.learn.blogging.entity.comment;
+import com.udemy.learn.blogging.entity.Comment;
 
-public interface commentRepository extends JpaRepository<comment,Long> {
-	List<comment>findByPostcommentId(long id);
+public interface CommentRepository extends JpaRepository<Comment,Long> {
+	List<Comment>findByPostId(long id);
 
 }

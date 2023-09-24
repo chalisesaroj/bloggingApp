@@ -1,4 +1,4 @@
-package com.udemy.learn.blogging.Controller;
+package com.udemy.learn.blogging.controller;
 
 import java.util.List;
 
@@ -15,43 +15,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.udemy.learn.blogging.entity.comment;
-import com.udemy.learn.blogging.payload.commentdto;
-import com.udemy.learn.blogging.service.commentService;
-import com.udemy.learn.blogging.serviceimpl.commentServiceImpl;
+import com.udemy.learn.blogging.entity.Comment;
+import com.udemy.learn.blogging.payload.CommentDto;
+import com.udemy.learn.blogging.service.CommentService;
+import com.udemy.learn.blogging.serviceimpl.CommentServiceImpl;
 
 @RestController
 @RequestMapping("/api")
-public class commentController {
+public class CommentController {
 	@Autowired
-	commentServiceImpl commentserviceimplementation;
+	CommentServiceImpl commentserviceimplementation;
 	@Autowired
-	commentService CommentService;
+	CommentService commentService;
+
 	@PostMapping("/post/{post_id}/comments")
-public ResponseEntity<commentdto>createComment(@PathVariable("post_id")long post_id,
-		@RequestBody commentdto commentDTO){
-			return new ResponseEntity(CommentService.createcomment(post_id, commentDTO),HttpStatus.CREATED);
-	
-}
-@GetMapping("/post/{post_id}/comments")
-public List<commentdto>readComment(@PathVariable("post_id")long post_id){
-			return CommentService.findcommentbyID(post_id);
-}
+	public ResponseEntity<CommentDto> createComment(@PathVariable("post_id") long post_id,
+			@RequestBody CommentDto commentDTO) {
+		return new ResponseEntity(commentService.createComment(post_id, commentDTO), HttpStatus.CREATED);
+	}
 
+	@GetMapping("/post/{post_id}/comments")
+	public List<CommentDto> readComment(@PathVariable("post_id") long post_id) {
+		return commentService.findCommentByID(post_id);
+	}
+/**
+ * This Methods Updates the Comments, with the given post_id and comment_id
+ * as path variables
+ * @param post_id
+ * @param commentDto
+ * @param comment_id
+ * @return CommentDto Object
+ */
+	@PutMapping("/post/{post_id}/comments/{comment_id}")
+	public CommentDto updateComment(@PathVariable("post_id") long post_id, @RequestBody CommentDto commentDto,
+			@PathVariable("comment_id") long comment_id) {
+		return commentService.updateComment(post_id, comment_id, commentDto);
+	}
 
-@PutMapping("/post/{post_id}/comments/{comment_id}")
-public commentdto updateComment(@PathVariable("post_id")long post_id,
-		@RequestBody commentdto CommentDto,
-		@PathVariable("comment_id")long comment_id)
-		{
-			return CommentService.updateComment(post_id, comment_id, CommentDto);	
-		}
-
-@DeleteMapping("/post/{post_id}/comments/{comment_id}")
-public ResponseEntity<String> deleteComment(@PathVariable("post_id")long post_id,
-		@PathVariable("comment_id")long comment_id)
-		{
-	CommentService.deleteComment(post_id, comment_id);		
-	return new ResponseEntity("Succesfully Deleted",HttpStatus.OK)	;
-		}
+	@DeleteMapping("/post/{post_id}/comments/{comment_id}")
+	public ResponseEntity<String> deleteComment(@PathVariable("post_id") long post_id,
+			@PathVariable("comment_id") long comment_id) {
+		commentService.deleteComment(post_id, comment_id);
+		return new ResponseEntity("Succesfully Deleted", HttpStatus.OK);
+	}
 }

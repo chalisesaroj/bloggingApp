@@ -13,25 +13,24 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class comment {
-	public comment(long id, String name, String email_id, String body) {
+public class Comment {
+	public Comment(long id, String name, String emailId, String body) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.email_id = email_id;
+		this.emailId = emailId;
 		this.body = body;
 	}
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	long id;
-
-	
 	String name;
-	String email_id;
+	String emailId;
 	String body;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="pot_id", nullable=false)
-	post postcomment;
+	@ManyToOne()
+	@JoinColumn(name="post_id", nullable=false)
+	Post post;
+	
 	public long getId() {
 		return id;
 	}
@@ -44,11 +43,11 @@ public class comment {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getEmail_id() {
-		return email_id;
+	public String getEmailId() {
+		return emailId;
 	}
-	public void setEmail_id(String email_id) {
-		this.email_id = email_id;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 	public String getBody() {
 		return body;
@@ -56,29 +55,28 @@ public class comment {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public post getPost_comment() {
-		return postcomment;
+	public Post getPost() {
+		return post;
 	}
-	public void setPost_comment(post post_comment) {
-		this.postcomment = post_comment;
+	public void setPost(Post post) {
+		this.post = post;
 	}
-	@Override
-	public String toString() {
-		return "comment [id=" + id + ", name=" + name + ", email_id=" + email_id + ", body=" + body + ", post_comment="
-				+ postcomment + "]";
-	}
-	public comment(long id, String name, String email_id, String body, post post_comment) {
+	public Comment(long id, String name, String emailId, String body, Post post) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.email_id = email_id;
+		this.emailId = emailId;
 		this.body = body;
-		this.postcomment = post_comment;
+		this.post = post;
 	}
-	public comment() {
+	public Comment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
+//	@Override
+//	public String toString() {
+//		return "Comment [id=" + id + ", name=" + name + ", emailId=" + emailId + ", body=" + body + ", post=" + post
+//				+ "]";
+//	}
+		
 }

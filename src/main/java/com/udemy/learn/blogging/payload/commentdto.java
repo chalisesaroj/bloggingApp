@@ -1,6 +1,6 @@
 package com.udemy.learn.blogging.payload;
 
-public class commentdto {
+public class CommentDto {
 	long id;
 	String email_id;
 	String name;
@@ -33,7 +33,7 @@ public class commentdto {
 	public String toString() {
 		return "commentdto [id=" + id + ", email_id=" + email_id + ", name=" + name + ", body=" + body + "]";
 	}
-	public commentdto(long id, String email_id, String name, String body) {
+	public CommentDto(long id, String email_id, String name, String body) {
 		super();
 		this.id = id;
 		this.email_id = email_id;

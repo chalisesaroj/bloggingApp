@@ -2,10 +2,10 @@ package com.udemy.learn.blogging.payload;
 
 import java.util.List;
 
-import com.udemy.learn.blogging.entity.post;
+import com.udemy.learn.blogging.entity.Post;
 
-public class pageResponse {
-	List<post> contents;
+public class PageResponse {
+	List<PostDto> contents;
 	int pageNumber;
 	int pageSize;
 	int noOfPage;
@@ -18,12 +18,14 @@ public class pageResponse {
 	public void setNoOfElements(int noOfElements) {
 		this.noOfElements = noOfElements;
 	}
-	public List<post> getContents() {
+	
+	public List<PostDto> getContents() {
 		return contents;
 	}
-	public void setContents(List<post> contents) {
+	public void setContents(List<PostDto> contents) {
 		this.contents = contents;
 	}
+
 	boolean isLast;
 	public int getPageNumber() {
 		return pageNumber;

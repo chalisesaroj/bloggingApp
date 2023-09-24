@@ -1,28 +1,35 @@
 package com.udemy.learn.blogging.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-public class post {
+
+public class Post {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	long id;
 	 String title;
 	 String description;
 	String content;
-	@OneToMany(mappedBy="postcomment", cascade=CascadeType.ALL)
-	List<comment>COMMENT;
+	@OneToMany(mappedBy="post",cascade=CascadeType.ALL)
+	List<Comment>comment;
+	@ManyToOne()
+	Category category;
+	@CreationTimestamp
+	private LocalDateTime dateCreated;
 	public long getId() {
 		return id;
 	}
@@ -47,32 +54,37 @@ public class post {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	public post(long id, String title, String description, String content, List<comment> cOMMENT) {
+	public List<Comment> getComment() {
+		return comment;
+	}
+	public void setComment(List<Comment> comment) {
+		this.comment = comment;
+	}
+	public Category getCategory() {
+		return category;
+	}
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	public LocalDateTime getCreatedtimes() {
+		return dateCreated;
+	}
+	public void setCreatedtimes(LocalDateTime createdtimes) {
+		this.dateCreated = createdtimes;
+	}
+	public Post(long id, String title, String description, String content, List<Comment> comment, Category category,
+			LocalDateTime createdtimes) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.content = content;
-		COMMENT = cOMMENT;
+		this.comment = comment;
+		this.category = category;
+		this.dateCreated = createdtimes;
 	}
-	public List<comment> getCOMMENT() {
-		return COMMENT;
-	}
-	public void setCOMMENT(List<comment> cOMMENT) {
-		COMMENT = cOMMENT;
-	}
-	@Override
-	public String toString() {
-		return "post [id=" + id + ", title=" + title + ", description=" + description + ", content=" + content
-				+ ", COMMENT=" + COMMENT + "]";
-	}
-	public post() {
-		super();
+	public Post() {
 		// TODO Auto-generated constructor stub
 	}
-
-
-	
 	
 }
