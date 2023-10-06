@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import com.udemy.learn.blogging.entity.Post;
 import com.udemy.learn.blogging.payload.LoginDto;
 import com.udemy.learn.blogging.payload.PageResponse;
 import com.udemy.learn.blogging.payload.PostDto;
+import com.udemy.learn.blogging.payload.PostUpdateResponse;
 import com.udemy.learn.blogging.repository.PostRepository;
 import com.udemy.learn.blogging.service.PostService;
 import com.udemy.learn.blogging.serviceimpl.PostServiceImpl;
@@ -62,14 +64,31 @@ public class PostController {
 	    
 	    return listofPostsBetweenDates.stream().map(p -> postService.mapToDto(p)).collect(Collectors.toList());
 	}
+	/**
+	 * This method is used to search the post object.Any post having 
+	 * matching keyword in content/description/title of the post will
+	 * be returned
+	 * @param keyword
+	 * @return
+	 */
+	@GetMapping("/searchPost")
+	public List<PostDto> searchByKeyword(
+	        @RequestParam String keyword) {
+	    
+	 
+	    return postService.searchbykeyword(keyword);
+	}
+
 
 
 	/**
-	 * 
+	 * This method is used to create a new post
+	 * Post object is provided in request Body
 	 * @param postDto
 	 * @return
 	 */
 
+	
 	@PostMapping()
 	public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
 		return new ResponseEntity<PostDto>(postService.createPost(postDto), HttpStatus.OK);
@@ -92,7 +111,11 @@ public class PostController {
 
 		return postService.getAllPost(pageNumber, pageSize, sortBy, sortDirection);
 	}
-
+/**
+ * This method is used to get post from the id.
+ * @param id
+ * @return
+ */
 	@GetMapping("/{id}")
 	public PostDto getPostbyId(@PathVariable("id") long id) {
 
@@ -100,23 +123,27 @@ public class PostController {
 
 	}
 
-//update API
+/**
+ * This method is used to update the existing post
+ * @param postDto
+ * @param id
+ * @return
+ */
 	@PutMapping("/{id}")
-	public PostDto updatePostbyId(@Valid @RequestBody PostDto postDto, @PathVariable("id") long id) {
+	public PostUpdateResponse updatePostbyId(@Valid @RequestBody PostDto postDto, @PathVariable("id") long id) {
 		return postService.updatePost(postDto, id);
 	}
+	
 
-//delete API
+/**
+ * 
+ * @param id
+ * @return
+ */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deletebyId(@PathVariable("id") long id) {
-		Optional<Post> p1 = postRepository.findById(id);
-		if (p1.isPresent()) {
-			postRepository.deleteById(id);
-			return new ResponseEntity("Succesfully Deleted", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<String>("couldnot be deleted", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
+	postService.deletePost(id);
+		return new ResponseEntity<>("Succesfully Deleted",HttpStatus.OK);
 	}
 
 }

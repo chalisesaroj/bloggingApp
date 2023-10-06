@@ -1,22 +1,18 @@
 package com.udemy.learn.blogging.payload;
 
-import java.util.List;
-
-import com.udemy.learn.blogging.entity.Post;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
-	long Id;
-	String name;
-	String Description;
+public class ErrorDetails {
+	private Date timestamp;
+	private String message;
+	private String details;
 
-	
-	
 }

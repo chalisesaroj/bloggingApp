@@ -1,8 +1,9 @@
 package com.udemy.learn.blogging.configuration;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,21 +24,39 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableMethodSecurity
 public class ConfigurationClass {
-	@Autowired
-	private UserDetailsService userDetailService;
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+	    CorsConfiguration configuration = new CorsConfiguration();
+	    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+	    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+	    
+	    // Allow specific headers, including the "Authorization" header
+	    configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
+	    configuration.setMaxAge(3640L);
+	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	    source.registerCorsConfiguration("/**", configuration);
+	    return source;
+	}
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-		http.csrf().disable().authorizeHttpRequests(authorize -> {
-			authorize.anyRequest().authenticated();
-		}).httpBasic();
-		return http.build();
+	    http.csrf().disable().cors().and()
+	        .authorizeRequests()
+	        .anyRequest()
+	        .authenticated()
+	        .and()
+	        .httpBasic();
+	    return http.build();
 	}
+
 
 	@Bean
 	public AuthenticationManager authentication(AuthenticationConfiguration authenticationconfiguration)
@@ -45,13 +64,6 @@ public class ConfigurationClass {
 		return authenticationconfiguration.getAuthenticationManager();
 	}
 
-//	@Bean
-//UserDetailsService inmemoryauthman() {
-//	UserDetails user1=User.builder().username("Saroj").password(this.passwordEncoder().encode("Saroj")).roles("ADMIN").build();
-//	UserDetails user2=User.builder().username("Anzeela").password(this.passwordEncoder().encode("Anzeela")).roles("USER").build();
-//	return new InMemoryUserDetailsManager(user1,user2);
-//	
-//}
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();

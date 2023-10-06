@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.udemy.learn.blogging.entity.Comment;
 import com.udemy.learn.blogging.entity.Post;
+import com.udemy.learn.blogging.exception.RescourceNotFound;
 import com.udemy.learn.blogging.payload.CommentDto;
 import com.udemy.learn.blogging.repository.CommentRepository;
 import com.udemy.learn.blogging.repository.PostRepository;
@@ -39,8 +40,13 @@ public class CommentServiceImpl implements CommentService {
 
 	// Converting dto to entity
 
-	private Comment mapToEntity(CommentDto Commentdto) {
-		return new Comment(Commentdto.getId(), Commentdto.getName(), Commentdto.getEmail_id(), Commentdto.getBody());
+	private Comment mapToEntity(CommentDto commentDto) {
+		Comment comment=new Comment();
+		comment.setBody(commentDto.getBody());
+		comment.setEmailId(commentDto.getEmail_id());
+		comment.setId(commentDto.getId());
+		comment.setName(commentDto.getName());
+		return comment;
 	}
 
 	@Override
@@ -64,7 +70,21 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public void deleteComment(long post_id, long comment_id) {
-commentRepository.deleteById(comment_id);
+		Post post=postRepository.findById(post_id).
+				orElseThrow(()->new RescourceNotFound
+						("Post ID "+post_id +" doesnot exists"));
+		
+		Comment comment=commentRepository.findById(comment_id).
+				orElseThrow(()->new RescourceNotFound
+						("Comment ID "+comment_id +" doesnot exists"));
+		
+		if (post_id!=comment.getPost().getId()) {
+			throw new RescourceNotFound
+			("comment id "+ comment_id +" doesnot belongs to postid "
+					+ " "+post_id);
+		}
+		commentRepository.deleteById(comment_id);
 
 	}
 }
+  

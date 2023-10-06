@@ -28,10 +28,15 @@ private PostService postService;
 		categoryDto.setId(category.getId());
 		categoryDto.setDescription(category.getDescription());
 		categoryDto.setName(category.getName());
-		categoryDto.setListOfPosts(postService.findPostByCategoryID(category.getId()));
+	
 		return categoryDto;
 		
 	}
+	@Override
+	public List<String> getCategorynames(){
+		List<String>categoryList=categoryRepository.findAll().stream().map((category)->category.getName()).collect(Collectors.toList());
+			return categoryList;
+		}
 	Category mapToEntity(CategoryDto categoryDto) {
 		Category category=new Category();
 		category.setDescription(categoryDto.getDescription());

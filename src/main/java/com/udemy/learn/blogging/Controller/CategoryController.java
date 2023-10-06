@@ -24,4 +24,9 @@ public class CategoryController {
 	public List<CategoryDto> getAllCategory() {
 		return categoryService.getAllCategory();
 	}
+	@GetMapping("getCategoryNames")
+	public List<String> getCategorynames(){
+		return categoryService.getCategorynames();
+	
+	}
 }
